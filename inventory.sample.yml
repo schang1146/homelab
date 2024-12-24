@@ -1,0 +1,4 @@
+nas:
+  hosts:
+    {{ hostname }}:
+      ansible_user: {{ user }}
