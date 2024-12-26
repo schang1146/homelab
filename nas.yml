@@ -1,0 +1,10 @@
+- name: Setup Ansible NAS
+  hosts: nas
+
+  roles:
+    ### -------------------------------
+    ### Requirements
+    ### -------------------------------
+    - role: docker
+      tags:
+        - docker

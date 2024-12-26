@@ -1,9 +1,5 @@
 - name: Install Docker
-  become: true
-  hosts: prod
-  vars_files:
-    - secrets_{{ inventory_hostname }}.yml
-  tasks:
+  block:
     - name: Make sure Docker's package dependencies are present
       ansible.builtin.apt:
         pkg:
