@@ -63,6 +63,9 @@
         <mxCell id="LIDCZ998pxyHITSZ1xFP-6" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://logos-download.com/wp-content/uploads/2016/02/Ubuntu.png;" vertex="1" parent="1">
           <mxGeometry x="980" y="435" width="60" height="60" as="geometry" />
         </mxCell>
+        <mxCell id="LIDCZ998pxyHITSZ1xFP-29" value="&lt;div align=&quot;left&quot;&gt;&lt;font face=&quot;Fira Code&quot;&gt;Intel Core i7-6700K&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font face=&quot;Fira Code&quot;&gt;2x 8GB DDR4&lt;br&gt;&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacing=5;" vertex="1" parent="1">
+          <mxGeometry x="670" y="435" width="300" height="60" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
