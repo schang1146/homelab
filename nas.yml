@@ -8,3 +8,7 @@
     - role: docker
       tags:
         - docker
+
+    - role: tailscale
+      tags:
+        - tailscale
