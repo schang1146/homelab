@@ -1,3 +1,4 @@
 # Ansible
 inventory.yml
+*/group_vars/*
 *.retry
