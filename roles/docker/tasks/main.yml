@@ -1,5 +1,9 @@
 - name: Install Docker
   block:
+    ### -------------------------------
+    ### Install Docker Engine on Ubuntu
+    ### https://docs.docker.com/engine/install/ubuntu/
+    ### -------------------------------
     - name: Make sure Docker's package dependencies are present
       ansible.builtin.apt:
         pkg:
@@ -46,3 +50,14 @@
           - docker-buildx-plugin
           - docker-compose-plugin
         state: present
+
+- name: Setup Docker
+  block:
+    ### -------------------------------
+    ### Misc.
+    ### -------------------------------
+    - name: Create Docker storage directory
+      ansible.builtin.file:
+        path: "{{ docker_root }}"
+        mode: '0755'
+        state: directory
