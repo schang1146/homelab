@@ -1,0 +1,16 @@
+### -------------------------------
+### Directories
+### -------------------------------
+server_root: /mnt/{{ volume_name }}
+
+books_root: "{{ server_root }}/books"
+documents_root: "{{ server_root }}/documents"
+downloads_root: "{{ server_root }}/downloads"
+movies_root: "{{ server_root }}/movies"
+music_root: "{{ server_root }}/music"
+photos_root: "{{ server_root }}/photos"
+podcasts_root: "{{ server_root }}/podcasts"
+roms_root: "{{ server_root }}/roms"
+videos_root: "{{ server_root }}/videos"
+youtube_root: "{{ server_root }}/youtube"
+tv_root: "{{ server_root }}/tv"
