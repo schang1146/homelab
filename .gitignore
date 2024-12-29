@@ -2,3 +2,6 @@
 inventory.yml
 */group_vars/*
 *.retry
+
+# VSCode
+.vscode
