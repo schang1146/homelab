@@ -1,0 +1,57 @@
+# Shared directories published over Samba
+samba_shares:
+  - name: books
+    comment: "Books"
+    read_only: false
+    browsable: true
+    path: "{{ books_root }}"
+  - name: documents
+    comment: "Documents"
+    read_only: false
+    browsable: true
+    path: "{{ documents_root }}"
+  - name: downloads
+    comment: "Downloads"
+    read_only: false
+    browsable: true
+    path: "{{ downloads_root }}"
+  - name: movies
+    comment: "Movies"
+    read_only: false
+    browsable: true
+    path: "{{ movies_root }}"
+  - name: music
+    comment: "Music"
+    read_only: false
+    browsable: true
+    path: "{{ music_root }}"
+  - name: photos
+    comment: "Photos"
+    read_only: false
+    browsable: true
+    path: "{{ photos_root }}"
+  - name: podcasts
+    comment: "Podcasts"
+    read_only: false
+    browsable: true
+    path: "{{ podcasts_root }}"
+  - name: roms
+    comment: "ROMs"
+    read_only: false
+    browsable: true
+    path: "{{ roms_root }}"
+  - name: videos
+    comment: "Videos"
+    read_only: false
+    browsable: true
+    path: "{{ videos_root }}"
+  - name: youtube
+    comment: "Youtube"
+    read_only: false
+    browsable: true
+    path: "{{ youtube_root }}"
+  - name: tv
+    comment: "TV Shows"
+    read_only: false
+    browsable: true
+    path: "{{ tv_root }}"

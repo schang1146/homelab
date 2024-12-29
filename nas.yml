@@ -5,6 +5,10 @@
     ### -------------------------------
     ### Requirements
     ### -------------------------------
+    - role: ansible-general
+      tags:
+        - ansible-general
+
     - role: docker
       tags:
         - docker
@@ -12,3 +16,7 @@
     - role: tailscale
       tags:
         - tailscale
+
+    - role: samba
+      tags:
+        - samba

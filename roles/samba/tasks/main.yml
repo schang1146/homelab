@@ -1,0 +1,16 @@
+- name: Install and Configure Samba
+  block:
+    - name: Installing Samba
+      ansible.builtin.apt:
+        pkg: samba
+        state: present
+    - name: Setting up Samba
+      ansible.builtin.template:
+        src: ../files/samba_config.j2
+        dest: /etc/samba/smb.conf
+        mode: "0644"
+      notify: Restart Samba
+    - name: Update firewall rules to allow Samba traffic
+      ansible.builtin.command: sudo ufw allow samba
+      register: ufw_update_result
+      changed_when: "'Skipping adding existing rule' not in ufw_update_result.stdout"

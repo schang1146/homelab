@@ -1,0 +1,7 @@
+{% for item in samba_shares %}
+[{{ item.comment }}]
+    comment = {{ item.comment }}
+    path = {{ item.path }}
+    read only = {{ "yes" if item.read_only else "no" }}
+    browsable = {{ "yes" if item.browsable else "no" }}
+{% endfor %}
