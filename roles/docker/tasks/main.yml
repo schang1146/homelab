@@ -32,6 +32,7 @@
       ansible.builtin.command: dpkg --print-architecture
       register: dpkg_arch
       changed_when: false
+      check_mode: false
 
     - name: Add Docker repository to Apt sources
       ansible.builtin.apt_repository:
