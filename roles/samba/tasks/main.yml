@@ -1,4 +1,4 @@
-- name: Install and Configure Samba
+- name: Install and configure Samba
   block:
     - name: Installing Samba
       ansible.builtin.apt:
