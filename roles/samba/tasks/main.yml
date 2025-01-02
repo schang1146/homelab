@@ -9,7 +9,7 @@
         src: ../files/samba_config.j2
         dest: /etc/samba/smb.conf
         mode: "0644"
-      notify: Restart Samba
+      notify: Restart Samba service
     - name: Update firewall rules to allow Samba traffic
       ansible.builtin.command: sudo ufw allow samba
       register: ufw_update_result
