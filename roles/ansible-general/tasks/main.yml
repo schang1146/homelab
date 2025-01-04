@@ -3,4 +3,6 @@
     path: "{{ item.path }}"
     state: directory
     mode: "0775"
+    group: "{{ server_group }}"
+    owner: "{{ server_user }}"
   loop: "{{ samba_shares }}"

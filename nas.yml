@@ -24,3 +24,10 @@
     - role: samba
       tags:
         - samba
+
+    ### -------------------------------
+    ### Applications
+    ### -------------------------------
+    - role: jellyfin
+      tags:
+        - jellyfin

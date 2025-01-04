@@ -1,0 +1,14 @@
+jellyfin_enabled: true
+jellyfin_server_domain_name: "tree.schang.dev"
+
+### -------------------------------
+### Directories
+### -------------------------------
+jellyfin_root: "{{ docker_root }}/jellyfin"
+jellyfin_cache_directory: "{{ jellyfin_root }}/cache"
+jellyfin_config_directory: "{{ jellyfin_root }}/config"
+
+jellyfin_books_root: "{{ books_root }}"
+jellyfin_movies_root: "{{ movies_root }}"
+jellyfin_music_root: "{{ music_root }}"
+jellyfin_youtube_root: "{{ youtube_root }}"

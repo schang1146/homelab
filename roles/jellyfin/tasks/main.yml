@@ -1,0 +1,77 @@
+- name: Install and Setup Jellyfin
+  when: jellyfin_enabled is true
+  block:
+    - name: Download the latest container image
+      # Available Docker container images
+      # https://hub.docker.com/r/jellyfin/jellyfin/tags
+      ansible.builtin.command: docker pull jellyfin/jellyfin:latest
+      register: pull_result
+      changed_when: "'Image is up to date for jellyfin/jellyfin' not in pull_result.stdout"
+
+    - name: Create persistent storage for configuration and cache data
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: "0755"
+        state: directory
+      with_items:
+        - "{{ jellyfin_cache_directory }}"
+        - "{{ jellyfin_config_directory }}"
+
+    - name: Create Jellyfin Docker compose file
+      ansible.builtin.template:
+        src: ../files/docker_compose_template.j2
+        dest: "{{ jellyfin_root }}/docker-compose.yml"
+        mode: "0644"
+
+    - name: Create Jellyfin NGINX site config
+      ansible.builtin.template:
+        src: ../files/nginx_config.j2
+        dest: "/etc/nginx/sites-available/jellyfin"
+        mode: "0644"
+
+    - name: Activate Jellyfin NGINX site
+      ansible.builtin.command: sudo ln -s /etc/nginx/sites-available/jellyfin /etc/nginx/sites-enabled/
+      args:
+        creates: /etc/nginx/sites-enabled/jellyfin
+      notify: Restart NGINX service
+
+- name: Start Jellyfin
+  when: jellyfin_enabled is true
+  block:
+    - name: Get Jellyfin container status
+      ansible.builtin.command: docker container ls --filter name=jellyfin
+      register: jellyfin_container_status_result
+      changed_when: false
+      check_mode: false
+
+    - name: Start Jellyfin Docker container
+      when: jellyfin_container_status_result.stdout.find('jellyfin') == -1
+      ansible.builtin.command: docker compose up --detach
+      args:
+        chdir: "{{ jellyfin_root }}"
+      register: start_jellyfin
+      changed_when: start_jellyfin.stdout.find("Container jellyfin  Started") != -1 or start_jellyfin.stdout.find("Container jellyfin  Starting") != -1
+
+    - name: Restart Jellyfin Docker container
+      when: jellyfin_container_status_result.stdout.find('Up') != -1 and jellyfin_container_status_result.stdout.find('(healthy)') != -1
+      ansible.builtin.command: docker compose restart
+      args:
+        chdir: "{{ jellyfin_root }}"
+      register: restart_jellyfin
+      changed_when: restart_jellyfin.stdout.find("Container jellyfin  Restarted") != -1 or restart_jellyfin.stdout.find("Container jellyfin  Restarting") != -1
+
+- name: Stop Jellyfin
+  when: jellyfin_enabled is false
+  block:
+    - name: Stop Jellyfin Docker container
+      ansible.builtin.command: docker compose down
+      args:
+        chdir: "{{ jellyfin_root }}"
+      register: stop_jellyfin
+      changed_when: stop_jellyfin.stdout.find("Container jellyfin  Removed") != -1 or stop_jellyfin.stdout.find("Container jellyfin  Removing") != -1
+
+    - name: De-activate Jellyfin NGINX site
+      ansible.builtin.file:
+        path: /etc/nginx/sites-enabled/jellyfin
+        state: absent
+      notify: Restart NGINX service
