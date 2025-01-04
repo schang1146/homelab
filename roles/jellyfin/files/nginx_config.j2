@@ -3,7 +3,7 @@
 server {
     listen 80;
     listen [::]:80;
-    server_name {{ jellyfin_server_domain_name }};
+    server_name {{ server_domain_name }};
 
     # Uncomment to redirect HTTP to HTTPS
     return 301 https://$host$request_uri;
@@ -19,18 +19,18 @@ server {
     #listen [::]:443 ssl;
     #http2 on;
 
-    server_name {{ jellyfin_server_domain_name }};
+    server_name {{ server_domain_name }};
     # You can specify multiple domain names if you want
     #server_name jellyfin.local;
 
     # Uncomment next line to disable TLS 1.0 and 1.1 (Might break older devices)
     ssl_protocols TLSv1.3 TLSv1.2;
 
-    ssl_certificate /etc/letsencrypt/live/{{ jellyfin_server_domain_name }}/fullchain.pem; # managed by Certbot
-    ssl_certificate_key /etc/letsencrypt/live/{{ jellyfin_server_domain_name }}/privkey.pem; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/{{ server_domain_name }}/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/{{ server_domain_name }}/privkey.pem; # managed by Certbot
     include /etc/letsencrypt/options-ssl-nginx.conf;
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
-    ssl_trusted_certificate /etc/letsencrypt/live/{{ jellyfin_server_domain_name }}/chain.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/{{ server_domain_name }}/chain.pem;
     
     # use a variable to store the upstream proxy
     # in this example we are using a hostname which is resolved via DNS

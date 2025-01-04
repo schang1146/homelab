@@ -1,6 +1,7 @@
 ### -------------------------------
 ### Directories
 ### -------------------------------
+server_domain_name: "tree.schang.dev"
 server_root: /mnt/{{ volume_name }}
 server_user: "twig"
 server_group: "twig"

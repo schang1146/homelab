@@ -1,5 +1,4 @@
 jellyfin_enabled: true
-jellyfin_server_domain_name: "tree.schang.dev"
 
 ### -------------------------------
 ### Directories
