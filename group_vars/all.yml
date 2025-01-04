@@ -2,6 +2,8 @@
 ### Directories
 ### -------------------------------
 server_root: /mnt/{{ volume_name }}
+server_user: "twig"
+server_group: "twig"
 
 books_root: "{{ server_root }}/books"
 documents_root: "{{ server_root }}/documents"
