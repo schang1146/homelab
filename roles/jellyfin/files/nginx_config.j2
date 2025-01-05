@@ -1,4 +1,4 @@
-# Jellyfin hosted on https://example.org/jellyfin
+# Jellyfin hosted on https://{{ server_domain_name }}/jellyfin
 
 server {
     listen 80;
@@ -20,8 +20,6 @@ server {
     #http2 on;
 
     server_name {{ server_domain_name }};
-    # You can specify multiple domain names if you want
-    #server_name jellyfin.local;
 
     # Uncomment next line to disable TLS 1.0 and 1.1 (Might break older devices)
     ssl_protocols TLSv1.3 TLSv1.2;
@@ -42,7 +40,6 @@ server {
     # Security / XSS Mitigation Headers
     # NOTE: X-Frame-Options may cause issues with the webOS app 
     add_header X-Frame-Options "SAMEORIGIN";
-    # add_header X-XSS-Protection "0"; # Do NOT enable. This is obsolete/dangerous
     add_header X-Content-Type-Options "nosniff";
 
     # Permissions policy. May cause issues with some clients
