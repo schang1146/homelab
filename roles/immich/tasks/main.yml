@@ -1,0 +1,40 @@
+- name: Install and setup Immich
+  when: immich_enabled is true
+  block:
+    - name: Create directories for upload location and DB data
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: "0755"
+        state: directory
+      with_items:
+        - "{{ immich_upload_location }}"
+        - "{{ immich_db_data_location }}"
+
+    - name: Create Immich Docker compose file
+      ansible.builtin.template:
+        src: ../files/docker_compose_template.j2
+        dest: "{{ immich_root }}/docker-compose.yml"
+        mode: "0644"
+
+    - name: Create Immich .env file
+      ansible.builtin.template:
+        src: ../files/env_template.j2
+        dest: "{{ immich_root }}/.env"
+        mode: "0644"
+
+# - name: Start Immich
+#   when: immich_enabled is true
+#   block:
+#     - name: Get Immich container status
+#       ansible.builtin.command: docker container ls --filter name=immich
+#       register: immich_container_status_result
+#       changed_when: false
+#       check_mode: false
+
+#     - name: Start Immich Docker container
+#       when: immich_container_status_result.stdout.find('immich') == -1
+#       ansible.builtin.command: docker compose up --detach
+#       args:
+#         chdir: "{{ immich_root }}"
+#       register: start_immich
+#       changed_when: start_immich.stdout.find("Container immich  Started") != -1 or start_immich.stdout.find("Container immich  Starting") != -1

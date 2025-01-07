@@ -1,0 +1,11 @@
+immich_enabled: true
+
+immich_tz: "America/Los_Angeles"
+
+### -------------------------------
+### Directories
+### -------------------------------
+immich_root: "{{ docker_root }}/immich"
+
+immich_upload_location: "{{ immich_root }}/library"
+immich_db_data_location: "{{ immich_root }}/postgres"
