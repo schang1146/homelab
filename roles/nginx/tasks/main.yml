@@ -1,8 +1,0 @@
-- name: Install and configure NGINX
-  block:
-    - name: Install NGINX and certbot
-      ansible.builtin.apt:
-        pkg:
-          - nginx
-          - certbot
-        state: present

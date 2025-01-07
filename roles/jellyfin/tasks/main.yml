@@ -23,18 +23,6 @@
         dest: "{{ jellyfin_root }}/docker-compose.yml"
         mode: "0644"
 
-    - name: Create Jellyfin NGINX site config
-      ansible.builtin.template:
-        src: ../files/nginx_config.j2
-        dest: "/etc/nginx/sites-available/jellyfin"
-        mode: "0644"
-
-    - name: Activate Jellyfin NGINX site
-      ansible.builtin.command: sudo ln -s /etc/nginx/sites-available/jellyfin /etc/nginx/sites-enabled/
-      args:
-        creates: /etc/nginx/sites-enabled/jellyfin
-      notify: Restart NGINX service
-
 - name: Start Jellyfin
   when: jellyfin_enabled is true
   block:
@@ -69,9 +57,3 @@
         chdir: "{{ jellyfin_root }}"
       register: stop_jellyfin
       changed_when: stop_jellyfin.stdout.find("Container jellyfin  Removed") != -1 or stop_jellyfin.stdout.find("Container jellyfin  Removing") != -1
-
-    - name: De-activate Jellyfin NGINX site
-      ansible.builtin.file:
-        path: /etc/nginx/sites-enabled/jellyfin
-        state: absent
-      notify: Restart NGINX service
