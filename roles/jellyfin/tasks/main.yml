@@ -1,6 +1,12 @@
 - name: Install and setup Jellyfin
   when: jellyfin_enabled is true
   block:
+    - name: Create Jellyfin Docker directory
+      ansible.builtin.file:
+        path: "{{ jellyfin_root }}"
+        mode: "0755"
+        state: directory
+
     - name: Download the latest container image
       # Available Docker container images
       # https://hub.docker.com/r/jellyfin/jellyfin/tags
