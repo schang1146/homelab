@@ -1,0 +1,6 @@
+traefik_enabled: true
+
+### -------------------------------
+### Directories
+### -------------------------------
+traefik_root: "{{ docker_root }}/traefik"

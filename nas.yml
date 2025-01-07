@@ -31,3 +31,7 @@
     - role: immich
       tags:
         - immich
+
+    - role: traefik
+      tags:
+        - traefik
