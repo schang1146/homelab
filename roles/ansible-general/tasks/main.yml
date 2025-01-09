@@ -6,3 +6,9 @@
     group: "{{ server_group }}"
     owner: "{{ server_user }}"
   loop: "{{ samba_shares }}"
+
+- name: Create Let's Encrypt directory
+  ansible.builtin.file:
+    path: "{{ letsencrypt_directory }}"
+    state: directory
+    mode: "0775"
