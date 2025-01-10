@@ -1,0 +1,4 @@
+nas:
+  hosts:
+    tree:
+      ansible_user: twig
