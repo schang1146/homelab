@@ -4,3 +4,5 @@ traefik_enabled: true
 ### Directories
 ### -------------------------------
 traefik_root: "{{ docker_root }}/traefik"
+
+traefik_config_directory: "{{ traefik_root }}/config"

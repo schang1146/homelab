@@ -12,10 +12,32 @@
       register: pull_result
       changed_when: "'Image is up to date' not in pull_result.stdout"
 
+    - name: Create persistent storage for configuration data
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: "0755"
+        state: directory
+      with_items:
+        - "{{ traefik_config_directory }}"
+
     - name: Create Traefik Docker compose file
       ansible.builtin.template:
         src: ../files/docker_compose_template.j2
         dest: "{{ traefik_root }}/docker-compose.yml"
+        mode: "0644"
+
+    # Needed because this issue exists in the version of Traefik currently used
+    # https://github.com/traefik/traefik/issues/8753
+    - name: Create Traefik custom config
+      ansible.builtin.template:
+        src: ../files/dynamic_conf_template.j2
+        dest: "{{ traefik_config_directory }}/dynamic_conf.yml"
+        mode: "0644"
+
+    - name: Create Traefik environment vars file
+      ansible.builtin.template:
+        src: ../files/env_template.j2
+        dest: "{{ traefik_root }}/.env"
         mode: "0644"
 
 - name: Start Traefik
