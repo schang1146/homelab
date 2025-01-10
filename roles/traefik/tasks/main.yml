@@ -19,6 +19,7 @@
         state: directory
       with_items:
         - "{{ traefik_config_directory }}"
+        - "{{ traefik_config_directory }}/secrets"
 
     - name: Create Traefik Docker compose file
       ansible.builtin.template:
@@ -33,6 +34,14 @@
         src: ../files/dynamic_conf_template.j2
         dest: "{{ traefik_config_directory }}/dynamic_conf.yml"
         mode: "0644"
+
+    - name: Deploy secrets
+      ansible.builtin.copy:
+        dest: "{{ traefik_config_directory }}/secrets/vercel_api_token"
+        content: |
+          {{ vercel_api_token }}
+        mode: "0644"
+      # no_log: true
 
 - name: Start Traefik
   when: traefik_enabled is true

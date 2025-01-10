@@ -8,6 +8,9 @@ services:
       - "--providers.docker"
       # Do not expose all Docker services, only the ones explicitly exposed
       - "--providers.docker.exposedbydefault=false"
+      # Needed to establish jellyfin-svc
+      # https://github.com/traefik/traefik/issues/8753
+      - "--providers.file.filename=/config/dynamic_conf.yml"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--entrypoints.websecure.http.tls.certresolver=letsencrypt_resolver"
@@ -23,6 +26,15 @@ services:
       - "8080:8080"
     volumes:
       - {{ letsencrypt_directory }}:/letsencrypt
+      - {{ traefik_config_directory }}:/config
       # So that Traefik can listen to Docker events (read-only)
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      VERCEL_API_TOKEN: /run/secrets/vercel_api_token
+    secrets:
+      - vercel_api_token
     restart: 'unless-stopped'
+
+secrets:
+  vercel_api_token:
+    file: {{ traefik_config_directory }}/secrets/vercel_api_token
