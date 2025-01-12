@@ -29,6 +29,16 @@ services:
     restart: always
     healthcheck:
       disable: false
+    labels:
+      traefik.enable: true
+      # increase readingTimeouts for the entrypoint used here
+      traefik.http.routers.immich.tls: true
+      traefik.http.routers.immich.tls.certresolver: letsencrypt_resolver
+      traefik.http.routers.immich.tls.domains: {{ immich_domain_name }}
+      traefik.http.routers.immich.entrypoints: websecure
+      traefik.http.routers.immich.rule: Host(`{{ immich_domain_name }}`)
+      traefik.http.routers.immich.service: immich-svc@file
+      traefik.http.services.immich-svc.loadbalancer.server.port: 2283
 
   immich-machine-learning:
     container_name: immich_machine_learning

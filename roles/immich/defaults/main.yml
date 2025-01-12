@@ -1,5 +1,6 @@
 immich_enabled: true
 
+immich_domain_name: "immich.schang.dev"
 immich_tz: "America/Los_Angeles"
 
 ### -------------------------------
