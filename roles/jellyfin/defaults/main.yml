@@ -1,5 +1,7 @@
 jellyfin_enabled: true
 
+jellyfin_domain_name: "jellyfin.schang.dev"
+
 ### -------------------------------
 ### Directories
 ### -------------------------------
