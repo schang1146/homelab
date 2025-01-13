@@ -38,8 +38,7 @@
     - name: Deploy secrets
       ansible.builtin.copy:
         dest: "{{ traefik_config_directory }}/secrets/vercel_api_token"
-        content: |
-          {{ vercel_api_token }}
+        content: "{{ vercel_api_token }}"
         mode: "0644"
       # no_log: true
 
