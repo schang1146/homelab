@@ -17,6 +17,10 @@
       tags:
         - tailscale
 
+    - role: traefik
+      tags:
+        - traefik
+
     - role: samba
       tags:
         - samba
@@ -31,7 +35,3 @@
     - role: immich
       tags:
         - immich
-
-    - role: traefik
-      tags:
-        - traefik
