@@ -32,12 +32,15 @@ services:
       - {{ traefik_config_directory }}:/config
       # So that Traefik can listen to Docker events (read-only)
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    environment:
-      VERCEL_API_TOKEN: /run/secrets/vercel_api_token
-    secrets:
-      - vercel_api_token
+    env_file:
+      - {{ traefik_config_directory }}/secrets/vercel_api_token
     restart: 'unless-stopped'
-
-secrets:
-  vercel_api_token:
-    file: {{ traefik_config_directory }}/secrets/vercel_api_token
+    labels:
+      traefik.enable: true
+      traefik.http.routers.traefik.tls: true
+      traefik.http.routers.traefik.tls.certresolver: letsencrypt_resolver
+      traefik.http.routers.traefik.tls.domains: {{ traefik_domain_name }}
+      traefik.http.routers.traefik.entrypoints: websecure
+      traefik.http.routers.traefik.rule: Host(`{{ traefik_domain_name }}`)
+      traefik.http.routers.traefik.service: traefik-svc@file
+      traefik.http.services.traefik-svc.loadbalancer.server.port: 8080

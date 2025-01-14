@@ -1,5 +1,7 @@
 traefik_enabled: true
 
+traefik_domain_name: "traefik.schang.dev"
+
 ### -------------------------------
 ### Directories
 ### -------------------------------
