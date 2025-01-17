@@ -81,7 +81,7 @@ referencing==0.35.1
     # via
     #   jsonschema
     #   jsonschema-specifications
-resolvelib==1.0.1
+resolvelib==1.1.0
     # via ansible-core
 rpds-py==0.22.3
     # via
