@@ -35,3 +35,7 @@
     - role: immich
       tags:
         - immich
+
+    - role: ytdl_sub
+      tags:
+        - ytdl_sub
