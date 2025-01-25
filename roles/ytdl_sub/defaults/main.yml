@@ -1,0 +1,11 @@
+ytdl_sub_enabled: true
+
+ytdl_sub_domain_name: "ytdl.schang.dev"
+
+### -------------------------------
+### Directories
+### -------------------------------
+ytdl_sub_root: "{{ docker_root }}/ytdl_sub"
+ytdl_sub_config_directory: "{{ ytdl_sub_root }}/config"
+
+ytdl_sub_youtube_root: "{{ youtube_root }}"

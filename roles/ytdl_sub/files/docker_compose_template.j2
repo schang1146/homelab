@@ -1,0 +1,14 @@
+services:
+  ytdl-sub:
+    image: ghcr.io/jmbannon/ytdl-sub-gui:latest
+    container_name: ytdl-sub
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Los_Angeles
+    volumes:
+      - {{ ytdl_sub_config_directory }}:/config
+      - {{ ytdl_sub_youtube_root }}:/youtube
+    ports:
+      - 8443:8443
+    restart: unless-stopped
