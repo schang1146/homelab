@@ -1,0 +1,7 @@
+- name: Setup Monitoring Raspberry Pi
+  hosts: otel
+
+  roles:
+    - role: docker-pi
+      tags:
+        - docker-pi
