@@ -2,3 +2,8 @@ nas:
   hosts:
     tree:
       ansible_user: twig
+
+otel:
+  hosts:
+    sc-raspberrypi-monitoring:
+      ansible_user: overseer
