@@ -15,3 +15,7 @@
     - role: grafana
       tags:
         - grafana
+
+    - role: uptime-kuma
+      tags:
+        - uptime-kuma
