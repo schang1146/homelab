@@ -2,6 +2,16 @@
   hosts: otel
 
   roles:
+    ### -------------------------------
+    ### Requirements
+    ### -------------------------------
     - role: docker-pi
       tags:
         - docker-pi
+
+    ### -------------------------------
+    ### Applications
+    ### -------------------------------
+    - role: grafana
+      tags:
+        - grafana

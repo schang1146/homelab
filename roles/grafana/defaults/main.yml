@@ -1,0 +1,8 @@
+grafana_enabled: true
+
+grafana_domain_name: "grafana.schang.dev"
+
+### -------------------------------
+### Directories
+### -------------------------------
+grafana_root: "{{ docker_pi_root }}/grafana"
