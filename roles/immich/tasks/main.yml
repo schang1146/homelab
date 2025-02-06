@@ -6,6 +6,8 @@
         path: "{{ item }}"
         mode: "0755"
         state: directory
+        group: "{{ server_group }}"
+        owner: "{{ server_user }}"
       with_items:
         - "{{ immich_upload_location }}"
         - "{{ immich_db_data_location }}"
