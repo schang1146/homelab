@@ -6,6 +6,8 @@
         path: "{{ grafana_root }}"
         mode: "0755"
         state: directory
+        group: "{{ server_group }}"
+        owner: "{{ server_user }}"
 
     - name: Create Grafana Docker compose file
       ansible.builtin.template:
