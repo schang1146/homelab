@@ -1,9 +1,9 @@
 ### -------------------------------
 ### Directories
 ### -------------------------------
-server_root: /mnt/md0
-server_user: "twig"
-server_group: "twig"
+server_root: /mnt/lv1
+server_user: "schnag"
+server_group: "schang"
 
 letsencrypt_directory: "{{ server_root }}/.letsencrypt"
 
