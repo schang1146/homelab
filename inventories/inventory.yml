@@ -1,7 +1,7 @@
 nas:
   hosts:
-    tree:
-      ansible_user: twig
+    sc-server-main:
+      ansible_user: schang
 
 otel:
   hosts:

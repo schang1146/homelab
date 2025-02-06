@@ -6,6 +6,8 @@
         path: "{{ item }}"
         mode: "0755"
         state: directory
+        group: "{{ server_group }}"
+        owner: "{{ server_user }}"
       with_items:
         - "{{ ytdl_sub_config_directory }}"
         - "{{ ytdl_sub_youtube_root }}"

@@ -6,6 +6,8 @@
         path: "{{ jellyfin_root }}"
         mode: "0755"
         state: directory
+        group: "{{ server_group }}"
+        owner: "{{ server_user }}"
 
     - name: Download the latest container image
       # Available Docker container images
@@ -19,6 +21,8 @@
         path: "{{ item }}"
         mode: "0755"
         state: directory
+        group: "{{ server_group }}"
+        owner: "{{ server_user }}"
       with_items:
         - "{{ jellyfin_cache_directory }}"
         - "{{ jellyfin_config_directory }}"
