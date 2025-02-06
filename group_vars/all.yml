@@ -2,7 +2,7 @@
 ### Directories
 ### -------------------------------
 server_root: /mnt/lv1
-server_user: "schnag"
+server_user: "schang"
 server_group: "schang"
 
 letsencrypt_directory: "{{ server_root }}/.letsencrypt"
