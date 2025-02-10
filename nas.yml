@@ -9,6 +9,10 @@
       tags:
         - ansible-general
 
+    - role: monitoring
+      tags:
+        - monitoring
+
     - role: docker
       tags:
         - docker

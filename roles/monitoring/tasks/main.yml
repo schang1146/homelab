@@ -1,0 +1,41 @@
+- name: Install dependencies
+  ansible.builtin.apt:
+    pkg:
+      - mailutils
+      - mdadm
+      - postfix
+      - smartmontools
+
+- name: Copy out Postfix main.cf file
+  ansible.builtin.template:
+    src: ../files/main_cf.j2
+    dest: "{{ monitoring_postfix_root }}/main.cf"
+    mode: "0644"
+
+- name: Create SASL password file
+  ansible.builtin.template:
+    src: ../files/sasl_passwd.j2
+    dest: "{{ monitoring_sasl_passwd_path }}"
+    mode: "0600"
+
+- name: Create hashed SASL password database file
+  ansible.builtin.command: sudo postmap {{ monitoring_sasl_passwd_path }}
+
+- name: Restart Postfix
+  ansible.builtin.command: sudo systemctl restart postfix
+
+- name: Create directory to hold monitoring and alerting script
+  ansible.builtin.file:
+    path: "/root/scripts"
+    mode: "0755"
+    state: directory
+
+- name: Create monitoring and alerting script
+  ansible.builtin.template:
+    src: ../files/mdadm_alert.j2
+    dest: "/root/scripts/mdadm_alert.sh"
+    mode: "0755"
+    comment_start_string: "{="
+    comment_end_string: "=}"
+
+# TODO: Set up CRON job to run monitoring and alerting script every X (15) minutes
