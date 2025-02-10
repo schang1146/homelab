@@ -1,0 +1,261 @@
+#!/bin/bash
+
+# Heavily inspired if not almost copied from:
+# https://wiki.futo.org/wiki/Introduction_to_a_Self_Managed_Life:_a_13_hour_%26_28_minute_presentation_by_FUTO_software#5.1_Creating_the_alert_script
+
+# Stricter Error Handling
+# -e:          exits on errors
+# -u:          throws errors on unset variables
+# -o pipefail: ???
+set -euo pipefail
+# Set IFS (Internal Field Separator) to newline & tab to avoid issues with spaces and other weird characters in filenames
+IFS=$'\n\t'
+
+# Configuration variables
+EMAIL="{{ monitoring_alert_destination }}"  # Email to send alerts to
+HOSTNAME=$(hostname)                            # Pull the system's hostname dynamically and save
+LOG_DIR="/var/log/mdadm-monitor"                # Directory path for where logs go
+LOG_FILE="${LOG_DIR}/raid_health_check.log"     # Full path to the specific log file for RAID checks
+LOG_MAX_SIZE=$((10 * 1024 * 1024))              # Maximum log file size in bytes (10 MB)
+
+# Email configuration for the alert msg
+FROM_EMAIL="{{ monitoring_smtp_username }}"           # The email address of the sender
+FROM_NAME=$(hostname)                                 # The name of the sender
+REPLY_TO="no-reply <{{ monitoring_smtp_username }}>"  # The reply-to email address
+RETURN_PATH="bounce@{{ monitoring_fqdn }}"              # Return path for bounced emails when emails fail
+
+# Make empty variables & associated arrays
+errors=""                # Empty variable to collect error messages
+drive_health_report=""   # Another empty variable to store drive health details
+declare -A RAID_ARRAYS   # Array to keep track of RAID arrays found, indexed by name like "boot"
+declare -A SMART_SCORES  # Array to store SMART scores for drives, indexed by drive path
+
+# Set up log directory and ensure permissions are correct
+setup_logging() {
+    # Make the log directory if it doesn't already exist
+    mkdir -p "$LOG_DIR" || { echo "ERROR: Cannot create log directory $LOG_DIR"; exit 1; }
+    chmod 750 "$LOG_DIR"  # Set directory permissions to allow owner & group access but not others
+
+    # Check if the log file exists and exceeds the max size limit
+    if [ -f "$LOG_FILE" ] && [ "$(stat -c%s "$LOG_FILE")" -gt "$LOG_MAX_SIZE" ]; then  # `stat -c%s` gives the size in bytes
+        mv "$LOG_FILE" "$LOG_FILE.old"  # Archive the old log file by renaming it
+    fi
+    touch "$LOG_FILE"      # Create an empty log file
+    chmod 640 "$LOG_FILE"  # Set permissions on the log file (r+w for owner, r for group)
+}
+
+# Function for logging messages w/ timestamps
+log_message() {
+    # Output the message with the timestamp to both console & log file
+    local timestamp
+    timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    echo "[$timestamp] $1" | tee -a "$LOG_FILE"
+}
+
+# Function for logging errors (adds them to error string and logs them as "ERROR")
+log_error() {
+    local message="$1"             # Capture message passed to this function
+    errors="${errors}\n$message"   # Append this message to the global errors variable
+    log_message "ERROR: $message"  # Log the error with the timestamp
+}
+
+# Check that required dependencies are installed on the system
+check_dependencies() {
+    log_message "Checking required dependencies..."  # Announce the check in the log
+    local missing_deps=()  # Initialize an empty array for any missing packages
+
+    # Loop through each command we need, checking if it's available
+    for dep in mdadm smartctl lsblk findmnt awk grep dmsetup; do
+        if ! command -v "$dep" &>/dev/null; then
+            missing_deps+=("$dep")
+        fi
+    done
+
+    # If the array of missing dependencies isn't empty, log error and exit
+    if [ ${#missing_deps[@]} -ne 0 ]; then
+        log_error "Missing required dependencies: ${missing_deps[*]}"
+        log_error "Install them with: sudo apt-get install mdadm smartmontools util-linux findutils gawk grep dmsetup"
+        exit 1
+    fi
+}
+
+# Find & detect RAID arrays on this system
+detect_raid_arrays() {
+    log_message "Detecting RAID arrays..."
+
+    # Find all block devices with names like /dev/md0
+    local md_devices
+    md_devices=$(find /dev -name 'md[0-9]*' -type b)
+
+    # Loop through each RAID array found and log its details
+    for md_dev in $md_devices; do
+        local array_detail
+        array_detail=$(mdadm --detail "$md_dev" 2>/dev/null) || continue  # Get RAID details; skip if it fails
+
+        # Extract the RAID array name from the details
+        local array_name
+        array_name=$(echo "$array_detail" | grep "Name" | awk '{print $NF}')
+
+        # Use the name to decide if this array is for boot or root, then add it to RAID_ARRAYS
+#        if [[ "$array_name" == *"bootraid"* ]]; then  # NOTE: Unused for now as there is no RAID on boot drive
+        if [[ "$array_name" == *"ubuntu-server"* ]]; then
+            RAID_ARRAYS["root"]="$md_dev"
+            log_message "Found root array: $md_dev ($array_name)"
+        fi
+    done
+
+    # Check if we actually found expected root/boot arrays, log an error if any are missing
+    # NOTE: If statement block modified to only check for "root" RAID array; original commented out
+    # if [ -z "${RAID_ARRAYS["boot"]:-}" ] || [ -z "${RAID_ARRAYS["root"]:-}" ]; then
+    if [ -z "${RAID_ARRAYS["root"]:-}" ]; then
+        # log_error "Failed to detect both boot and root RAID arrays"
+        log_error "Failed to detect root RAID array"
+        # [ -z "${RAID_ARRAYS["boot"]:-}" ] && log_error "Boot array not found"
+        [ -z "${RAID_ARRAYS["root"]:-}" ] && log_error "Root array not found"
+        return 1
+    fi
+
+    # Print out a summary of all arrays found
+    log_message "Detected arrays:"
+    for purpose in "${!RAID_ARRAYS[@]}"; do
+        log_message "  $purpose: ${RAID_ARRAYS[$purpose]}"
+    done
+}
+
+# Check the health of a specific RAID array
+check_array_status() {
+    local array="$1"    # The path of the array device
+    local purpose="$2"  # Either "boot" or "root" to clarify which array
+
+    # Verify that the array actually exists as a block device
+    if [ ! -b "$array" ]; then
+        log_error "$purpose array device $array does not exist"  # Log the missing device
+        return 1
+    fi
+
+    # Get details about the RAID array and store it in the detail variable
+    local detail
+    detail=$(mdadm --detail "$array" 2>&1) || {  # `2>&1` captures error output in case of issues
+        log_error "Failed to get details for $purpose array ($array)"
+        return 1
+    }
+
+    # Extract the state of the array (like "clean" or "active") and log it
+    local state
+    state=$(echo "$detail" | grep "State :" | awk '{print $3,$4}')  # Get the words after "State :" from the details
+    log_message "$purpose array status: $state"
+
+    # If the array is in an undesirable state, log a warning
+    if [[ "$state" =~ degraded|DEGRADED|failed|FAILED|inactive|INACTIVE ]]; then
+        log_error "$purpose array ($array) is in state: $state"
+    fi
+
+    # Detect failed devices within the array
+    local failed_devices
+    failed_devices=$(echo "$detail" | grep "Failed Devices" | awk '{print $4}')  # Pull the failed devices count
+    if [ "$failed_devices" -gt 0 ]; then
+        while read -r line; do
+            if [[ "$line" =~ "faulty" ]]; then
+                local failed_dev
+                failed_dev=$(echo "$line" | awk '{print $7}')  # Get 7th word (device name)
+                log_error "$purpose array ($array) has failed device: $failed_dev"
+            fi
+        done < <(echo "$detail" | grep -A20 "Number" | grep "rebuilding")  # Again, look ahead 20 lines for any mention of "rebuilding"
+    fi
+}
+
+# Check the health of each drive within a RAID array
+check_drive_health() {
+    local drive="$1"        # The drive device to check (e.g. /dev/sda)
+    local health_score=100  # Initialize health score to 100 (perfect score)
+    local issues=""
+
+    # Skip the check if it's not a valid block device
+    if [ ! -b "$drive" ]; then
+        log_error "Device $drive is not a block device"  # Log the invalid device
+        return 1                                         # Exit with an error code
+    fi
+
+    log_message "Checking health of drive $drive..."
+
+    # Run SMART health check and reduce health score if it fails
+    if ! smartctl -H "$drive" | grep -q "PASSED"; then  # If it does NOT say "PASSED"
+        health_score=$((health_score - 50))        # Drop score by 50 pts if it fails
+        issues+="\n- Overall health check failed"  # Log this specific issue
+    fi
+
+    # Collect SMART attributes for further checks
+    local smart_attrs
+    smart_attrs=$(smartctl -A "$drive" 2>/dev/null) || true  # Redirect error to /dev/null
+
+    # Check for reallocated sectors (signs of drive wear and tear)
+    local reallocated
+    reallocated=$(echo "$smart_attrs" | awk '/^ 5/ {print $10}')  # Look for attribute ID 5 in SMART data
+    if [ -n "$reallocated" ] && [ "$reallocated" -gt 0 ]; then
+        health_score=$((health_score - 10))              # Drop score by 10 pts if we have reallocated sectors
+        issues+="\n- Reallocated sectors: $reallocated"  # Log this specific issue
+    fi
+
+    # Check for pending sectors (could cause read/write errors)
+    # Note, the pending sectors could cause read/write errors, not the check (lol)
+    local pending
+    pending=$(echo "$smart_attrs" | awk '/^197/ {print $10}')
+    if [ -n "$pending" ] && [ "$pending" -gt 0 ]; then
+        health_score=$((health_score - 10))      # Drop score by 10 pts if pending sectors are present
+        issues+="\n- Pending sectors: $pending"  # Log this specific issue
+    fi
+
+    SMART_SCORES["$drive"]=$health_score
+    if [ "$health_score" -lt 100 ]; then
+        drive_health_report+="\nDrive: $drive\nHealth Score: $health_score/100\nIssues: $issues"
+    fi
+}
+
+# Send email if any errors or health issues were found
+send_mail() {
+    local subject="RAID alert: Issues Detected on ${HOSTNAME}"
+    local content="RAID Health Monitor Report from ${HOSTNAME}\nTime: $(date '+%Y-%m-%d %H:%M:%S')\n"
+    [ -n "$errors" ] && content+="\nRAID Issues:${errors}"
+    [ -n "$drive_health_report" ] && content+="\nDrive Health Report:${drive_health_report}"
+
+    # Build the email using sendmail syntax
+    {
+        echo "Subject: $subject"
+        echo "To: ${EMAIL}"
+        echo "From: ${FROM_NAME} <${FROM_EMAIL}>"
+        echo "Reply-To: ${REPLY_TO}"
+        echo "Return-Path: ${RETURN_PATH}"
+        echo "Content-Type: text/plain; charset=UTF-8"  # Text format for readability
+        echo
+        echo -e "$content"  # Use `-e` to allow newline characters
+    } | sendmail -t         # Pipe the entire email message to sendmail for delivery
+}
+
+# Main function to execute checks and send email
+main() {
+    # Make sure script is run as root for necessary permissions
+    [ "$(id -u)" -ne 0 ] && { echo "ERROR: This script must be run as root"; exit 1; }
+    setup_logging                             # Call function to initialize logging setup
+    log_message "Starting RAID health check"  # Announce start of health check
+    check_dependencies                        # Verify dependencies are available
+    detect_raid_arrays                        # Detect RAID arrays
+
+    # Loop through each RAID array and check its status, then check each drive in the array
+    for purpose in "${!RAID_ARRAYS[@]}"; do
+        array="${RAID_ARRAYS[$purpose]}"
+        check_array_status "$array" "$purpose"
+
+        # For each device in the RAID array, check health
+        while read -r device; do
+            if [[ "$device" =~ ^/dev/ ]]; then
+                check_drive_health "$device"
+            fi
+        done < <(mdadm --detail "$array" | grep "active sync" | awk '{print $NF}')
+    done
+
+    # Send an email if errors or health issues were found; otherwise log a success message
+    [ -n "$errors" ] || [ -n "$drive_health_report" ] && send_mail || log_message "All checks passed successfully"
+}
+
+# Execute the main function to start everything
+main
