@@ -31,6 +31,15 @@
         dest: "{{ traefik_root }}/docker-compose.yml"
         mode: "0644"
 
+    - name: Get Tailscale IP of machine
+      ansible.builtin.command: tailscale ip
+      register: tailscale_ip
+      changed_when: false
+
+    - name: Get Tailscale IPv4 of machine
+      ansible.builtin.set_fact:
+        tailscale_ipv4: "{{ tailscale_ip.stdout_lines[0] }}"
+
     # Needed because this issue exists in the version of Traefik currently used
     # https://github.com/traefik/traefik/issues/8753
     - name: Create Traefik custom config
