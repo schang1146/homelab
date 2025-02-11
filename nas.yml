@@ -5,9 +5,9 @@
     ### -------------------------------
     ### Requirements
     ### -------------------------------
-    - role: ansible-general
+    - role: ansible_general
       tags:
-        - ansible-general
+        - ansible_general
 
     - role: monitoring
       tags:

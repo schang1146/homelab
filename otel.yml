@@ -5,9 +5,9 @@
     ### -------------------------------
     ### Requirements
     ### -------------------------------
-    - role: docker-pi
+    - role: docker_pi
       tags:
-        - docker-pi
+        - docker_pi
 
     ### -------------------------------
     ### Applications
