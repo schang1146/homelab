@@ -11,18 +11,22 @@
     src: ../files/main_cf.j2
     dest: "{{ monitoring_postfix_root }}/main.cf"
     mode: "0644"
+  register: postfix_main_config
 
 - name: Create SASL password file
   ansible.builtin.template:
     src: ../files/sasl_passwd.j2
     dest: "{{ monitoring_sasl_passwd_path }}"
     mode: "0600"
+  register: sasl_passwd
 
 - name: Create hashed SASL password database file
   ansible.builtin.command: sudo postmap {{ monitoring_sasl_passwd_path }}
+  changed_when: sasl_passwd.changed
 
 - name: Restart Postfix
   ansible.builtin.command: sudo systemctl restart postfix
+  changed_when: postfix_main_config.changed or sasl_passwd.changed
 
 - name: Create directory to hold monitoring and alerting script
   ansible.builtin.file:
