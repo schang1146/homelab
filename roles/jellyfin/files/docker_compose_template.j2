@@ -10,7 +10,7 @@ services:
       - "8096:8096"
       - "8920:8920"
     volumes:
-      - {{ server_root }}/.certs:/certs
+      - {{ server_raid_root }}/.certs:/certs
       - {{ jellyfin_cache_directory }}:/cache
       - {{ jellyfin_config_directory }}:/config
       - type: bind
