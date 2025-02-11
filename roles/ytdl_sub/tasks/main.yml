@@ -17,6 +17,8 @@
         src: ../files/docker_compose_template.j2
         dest: "{{ ytdl_sub_root }}/docker-compose.yml"
         mode: "0644"
+        group: "{{ server_group }}"
+        owner: "{{ server_user }}"
 
 - name: Get ytdl-sub container status
   ansible.builtin.command: docker container ls --filter name=ytdl-sub

@@ -32,6 +32,8 @@
         src: ../files/docker_compose_template.j2
         dest: "{{ jellyfin_root }}/docker-compose.yml"
         mode: "0644"
+        group: "{{ server_group }}"
+        owner: "{{ server_user }}"
 
 - name: Get Jellyfin container status
   ansible.builtin.command: docker container ls --filter name=jellyfin
