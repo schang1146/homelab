@@ -30,6 +30,8 @@
         src: ../files/docker_compose_template.j2
         dest: "{{ traefik_root }}/docker-compose.yml"
         mode: "0644"
+        group: "{{ server_group }}"
+        owner: "{{ server_user }}"
 
     - name: Get Tailscale IP of machine
       ansible.builtin.command: tailscale ip
@@ -47,6 +49,8 @@
         src: ../files/dynamic_conf_template.j2
         dest: "{{ traefik_config_directory }}/dynamic_conf.yml"
         mode: "0644"
+        group: "{{ server_group }}"
+        owner: "{{ server_user }}"
 
     - name: Deploy secrets
       ansible.builtin.copy:

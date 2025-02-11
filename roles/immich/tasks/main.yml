@@ -17,12 +17,16 @@
         src: ../files/docker_compose_template.j2
         dest: "{{ immich_root }}/docker-compose.yml"
         mode: "0644"
+        group: "{{ server_group }}"
+        owner: "{{ server_user }}"
 
     - name: Create Immich .env file
       ansible.builtin.template:
         src: ../files/env_template.j2
         dest: "{{ immich_root }}/.env"
         mode: "0644"
+        group: "{{ server_group }}"
+        owner: "{{ server_user }}"
 
 - name: Get Immich container status
   ansible.builtin.command: docker container ls --filter name=immich
