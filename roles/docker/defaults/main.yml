@@ -1,4 +1,4 @@
 ### -------------------------------
 ### Directories
 ### -------------------------------
-docker_root: "/mnt/md0/docker"
+docker_root: "{{ server_raid_root }}/docker"
