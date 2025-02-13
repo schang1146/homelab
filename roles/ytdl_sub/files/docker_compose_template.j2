@@ -12,3 +12,12 @@ services:
     ports:
       - 8443:8443
     restart: unless-stopped
+    labels:
+      traefik.enable: true
+      traefik.http.routers.ytdl.tls: true
+      traefik.http.routers.ytdl.tls.certresolver: letsencrypt_resolver
+      traefik.http.routers.ytdl.tls.domains: {{ ytdl_sub_domain_name }}
+      traefik.http.routers.ytdl.entrypoints: websecure
+      traefik.http.routers.ytdl.rule: Host(`{{ ytdl_sub_domain_name }}`)
+      traefik.http.routers.ytdl.service: ytdl-svc@file
+      traefik.http.services.ytdl-svc.loadBalancer.server.port: 8443

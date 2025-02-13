@@ -8,6 +8,10 @@ http:
       loadBalancer:
         servers:
         - url: "http://{{ tailscale_ipv4 }}:2283"
+    ytdl-svc:
+      loadBalancer:
+        servers:
+        - url: "http://{{ tailscale_ipv4 }}:8443"
     traefik-svc:
       loadBalancer:
         servers:
