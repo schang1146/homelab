@@ -17,7 +17,6 @@ services:
       # Notifications
       # The shoutrrr URL to send notifications to
       WATCHTOWER_NOTIFICATION_URL: >
-        discord://token@channel                     # TODO
-        slack://watchtower@token-a/token-b/token-c  # TODO
+        discord://{{ watchtower_discord_token }}@{{ watchtower_discord_webhookid }}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
