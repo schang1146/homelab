@@ -1,0 +1,4 @@
+### -------------------------------
+### Directories
+### -------------------------------
+watchtower_root: "{{ docker_root }}/watchtower"
