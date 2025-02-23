@@ -36,6 +36,7 @@ services:
       - {{ traefik_config_directory }}/secrets/vercel_api_token
     restart: 'unless-stopped'
     labels:
+      # Traefik
       traefik.enable: true
       traefik.http.routers.traefik.tls: true
       traefik.http.routers.traefik.tls.certresolver: letsencrypt_resolver
@@ -44,3 +45,5 @@ services:
       traefik.http.routers.traefik.rule: Host(`{{ traefik_domain_name }}`)
       traefik.http.routers.traefik.service: traefik-svc@file
       traefik.http.services.traefik-svc.loadbalancer.server.port: 8080
+      # Watchtower
+      com.centurylinklabs.watchtower.enable: true

@@ -27,6 +27,7 @@ services:
         target: /youtube
     restart: 'unless-stopped'
     labels:
+      # Traefik
       - "traefik.enable=true"
       - "traefik.http.routers.jellyfin.tls=true"
       - "traefik.http.routers.jellyfin.tls.certresolver=letsencrypt_resolver"
@@ -36,3 +37,5 @@ services:
       - "traefik.http.routers.jellyfin.service=jellyfin-svc@file"
       - "traefik.http.services.jellyfin-svc.loadBalancer.server.port=8096"
       - "traefik.http.services.jellyfin-svc.loadBalancer.passHostHeader=true"
+      # Watchtower
+      - "com.centurylinklabs.watchtower.enable=true"
