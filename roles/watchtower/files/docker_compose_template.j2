@@ -1,0 +1,25 @@
+services:
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: always
+    environment:
+      # Watchtower environment arguments and their use can be found:
+      # https://github.com/containrrr/watchtower/blob/main/docs/arguments.md?plain=1
+
+      # Removes old images after updating. When this flag is specified, watchtower will remove the old image after restarting a container with a new image. Use this option to prevent the accumulation of orphaned images on your system as containers are updated.
+      WATCHTOWER_CLEANUP: "true"
+      # Monitor and update containers that have a `com.centurylinklabs.watchtower.enable` label set to true.
+      WATCHTOWER_LABEL_ENABLE: "true"
+      # Poll interval (in seconds). This value controls how frequently watchtower will poll for new images. Either `--schedule` or a poll interval can be defined, but not both.
+      WATCHTOWER_POLL_INTERVAL: 86400 # 24 hours
+
+      # Notifications
+      # The shoutrrr URL to send notifications to
+      WATCHTOWER_NOTIFICATION_URL: >
+        discord://{{ watchtower_discord_token }}@{{ watchtower_discord_webhookid }}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      # Watchtower
+      - "com.centurylinklabs.watchtower.enable=true"

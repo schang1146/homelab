@@ -21,3 +21,5 @@ services:
       traefik.http.routers.ytdl.rule: Host(`{{ ytdl_sub_domain_name }}`)
       traefik.http.routers.ytdl.service: ytdl-svc@file
       traefik.http.services.ytdl-svc.loadBalancer.server.port: 8443
+      # Watchtower
+      com.centurylinklabs.watchtower.enable: true

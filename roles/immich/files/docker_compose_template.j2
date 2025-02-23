@@ -30,6 +30,7 @@ services:
     healthcheck:
       disable: false
     labels:
+      # Traefik
       traefik.enable: true
       # increase readingTimeouts for the entrypoint used here
       traefik.http.routers.immich.tls: true
@@ -39,6 +40,8 @@ services:
       traefik.http.routers.immich.rule: Host(`{{ immich_domain_name }}`)
       traefik.http.routers.immich.service: immich-svc@file
       traefik.http.services.immich-svc.loadbalancer.server.port: 2283
+      # Watchtower
+      com.centurylinklabs.watchtower.enable: true
 
   immich-machine-learning:
     container_name: immich_machine_learning
