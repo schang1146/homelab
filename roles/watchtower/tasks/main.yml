@@ -23,7 +23,6 @@
   check_mode: false
 
 - name: Start or restart Watchtower
-  when: watchtower_enabled is true
   block:
     - name: Start Watchtower Docker container
       when: watchtower_container_status_result.stdout.find('watchtower') == -1
