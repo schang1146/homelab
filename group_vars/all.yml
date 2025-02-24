@@ -4,6 +4,8 @@
 server_raid_root: /mnt/lv1
 server_user: "schang"
 server_group: "schang"
+otel_server_user: "overseer"
+otel_server_group: "overseer"
 
 letsencrypt_directory: "{{ server_raid_root }}/.letsencrypt"
 
