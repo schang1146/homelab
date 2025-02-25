@@ -1,4 +1,4 @@
 ### -------------------------------
 ### Directories
 ### -------------------------------
-docker_root: "{{ server_raid_root }}/docker"
+docker_root: "{{ server_root }}/docker"
