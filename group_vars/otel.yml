@@ -1,0 +1,6 @@
+### -------------------------------
+### Directories
+### -------------------------------
+server_root: "/home/{{ server_user }}"
+
+letsencrypt_directory: "{{ server_root }}/.letsencrypt"

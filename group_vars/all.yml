@@ -1,27 +1,4 @@
 ### -------------------------------
-### Directories
-### -------------------------------
-server_raid_root: /mnt/lv1
-server_user: "schang"
-server_group: "schang"
-otel_server_user: "overseer"
-otel_server_group: "overseer"
-
-letsencrypt_directory: "{{ server_raid_root }}/.letsencrypt"
-
-books_root: "{{ server_raid_root }}/books"
-documents_root: "{{ server_raid_root }}/documents"
-downloads_root: "{{ server_raid_root }}/downloads"
-movies_root: "{{ server_raid_root }}/movies"
-music_root: "{{ server_raid_root }}/music"
-photos_root: "{{ server_raid_root }}/photos"
-podcasts_root: "{{ server_raid_root }}/podcasts"
-roms_root: "{{ server_raid_root }}/roms"
-videos_root: "{{ server_raid_root }}/videos"
-youtube_root: "{{ server_raid_root }}/youtube"
-tv_root: "{{ server_raid_root }}/tv"
-
-### -------------------------------
 ### Vault
 ### -------------------------------
 vercel_api_token: !vault |
