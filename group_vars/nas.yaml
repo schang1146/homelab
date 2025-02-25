@@ -1,7 +1,7 @@
 ### -------------------------------
 ### Directories
 ### -------------------------------
-server_root: /mnt/lv1
+server_root: "{{ server_raid_storage_directory }}"
 
 letsencrypt_directory: "{{ server_root }}/.letsencrypt"
 
