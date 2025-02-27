@@ -1,0 +1,4 @@
+server_user: "schang"
+server_group: "schang"
+
+server_raid_storage_directory: "/mnt/lv1"
