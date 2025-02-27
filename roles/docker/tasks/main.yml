@@ -24,7 +24,7 @@
       check_mode: false
 
     - name: Add Docker's official GPG key
-      ansible.builtin.command: sudo curl -fsSL https://download.docker.com/linux/{{ linux_distro }}/gpg -o /etc/apt/keyrings/docker.asc
+      ansible.builtin.command: sudo curl -fsSL https://download.docker.com/linux/{{ linux_distro.stdout }}/gpg -o /etc/apt/keyrings/docker.asc
       args:
         creates: /etc/apt/keyrings/docker.asc
 
@@ -44,7 +44,7 @@
       ansible.builtin.apt_repository:
         repo: >
           deb [arch={{ dpkg_arch.stdout }} signed-by=/etc/apt/keyrings/docker.asc]
-          https://download.docker.com/linux/{{ linux_distro }} {{ ansible_distribution_release }} stable
+          https://download.docker.com/linux/{{ linux_distro.stdout }} {{ ansible_distribution_release }} stable
         filename: docker
         state: present
 

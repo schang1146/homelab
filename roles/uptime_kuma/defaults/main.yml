@@ -1,9 +1,9 @@
 uptime_kuma_enabled: true
 
-uptime_kuma_domain_name: "kuma.schang.dev"
+uptime_kuma_domain_name: "status.schang.dev"
 
 ### -------------------------------
 ### Directories
 ### -------------------------------
-uptime_kuma_root: "{{ docker_pi_root }}/uptime-kuma"
+uptime_kuma_root: "{{ docker_root }}/uptime-kuma"
 uptime_kuma_data: "{{ uptime_kuma_root }}/uptime-kuma-data"
