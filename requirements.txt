@@ -33,7 +33,7 @@ click==8.1.8
     #   pip-tools
 cryptography==44.0.1
     # via ansible-core
-filelock==3.16.1
+filelock==3.18.0
     # via ansible-lint
 importlib-metadata==8.5.0
     # via ansible-lint
