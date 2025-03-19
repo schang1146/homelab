@@ -27,7 +27,7 @@ services:
         target: /youtube
     restart: 'unless-stopped'
     labels:
-      # Traefik
+      # Traefik 
       - "traefik.enable=true"
       - "traefik.http.routers.jellyfin.tls=true"
       - "traefik.http.routers.jellyfin.tls.certresolver=letsencrypt_resolver"
@@ -36,7 +36,7 @@ services:
       - "traefik.http.routers.jellyfin.rule=Host(`{{ jellyfin_domain_name }}`)"
       - "traefik.http.routers.jellyfin.service=jellyfin-svc"
       - "traefik.http.services.jellyfin-svc.loadBalancer.server.port=8096"
-      - "traefik.http.services.jellyfin-svc.loadBalancer.server.url="http://{{ tailscale_ipv4 }}:8096"
+      - "traefik.http.services.jellyfin-svc.loadBalancer.server.url=http://100.105.95.120:8096"
       - "traefik.http.services.jellyfin-svc.loadBalancer.passHostHeader=true"
       # Watchtower
       - "com.centurylinklabs.watchtower.enable=true"
