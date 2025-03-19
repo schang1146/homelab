@@ -34,8 +34,9 @@ services:
       - "traefik.http.routers.jellyfin.tls.domains={{ jellyfin_domain_name }}"
       - "traefik.http.routers.jellyfin.entrypoints=websecure"
       - "traefik.http.routers.jellyfin.rule=Host(`{{ jellyfin_domain_name }}`)"
-      - "traefik.http.routers.jellyfin.service=jellyfin-svc@file"
+      - "traefik.http.routers.jellyfin.service=jellyfin-svc"
       - "traefik.http.services.jellyfin-svc.loadBalancer.server.port=8096"
+      - "traefik.http.services.jellyfin-svc.loadBalancer.server.url="http://{{ tailscale_ipv4 }}:8096"
       - "traefik.http.services.jellyfin-svc.loadBalancer.passHostHeader=true"
       # Watchtower
       - "com.centurylinklabs.watchtower.enable=true"
