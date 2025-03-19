@@ -37,6 +37,7 @@
       ansible.builtin.command: tailscale ip
       register: tailscale_ip
       changed_when: false
+      check_mode: false
 
     - name: Get Tailscale IPv4 of machine
       ansible.builtin.set_fact:

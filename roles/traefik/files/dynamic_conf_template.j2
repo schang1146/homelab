@@ -1,9 +1,15 @@
 http:
+  routers:
+    uptime-kuma:
+      tls:
+        certResolver: letsencrypt_resolver
+        domains: status.schang.dev
+      rule: Host(`status.schang.dev`)
+      service: uptime-kuma-svc
+      entryPoints:
+        - websecure
+
   services:
-    jellyfin-svc:
-      loadBalancer:
-        servers:
-        - url: "http://{{ tailscale_ipv4 }}:8096"
     immich-svc:
       loadBalancer:
         servers:
@@ -16,3 +22,8 @@ http:
       loadBalancer:
         servers:
         - url: "http://{{ tailscale_ipv4 }}:8080"
+    uptime-kuma-svc:
+      loadBalancer:
+        passHostHeader: true
+        servers:
+        - url: "http://100.108.234.120:3001"
