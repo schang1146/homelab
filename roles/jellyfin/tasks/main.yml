@@ -41,7 +41,7 @@
   changed_when: false
   check_mode: false
 
-- name: Start or restart Jellyfin
+- name: Start/restart Jellyfin
   when: jellyfin_enabled is true
   block:
     - name: Start Jellyfin Docker container
@@ -51,14 +51,6 @@
         chdir: "{{ jellyfin_root }}"
       register: start_jellyfin
       changed_when: start_jellyfin.rc == 0
-
-    - name: Restart Jellyfin Docker container
-      when: jellyfin_container_status_result.stdout.find('Up') != -1
-      ansible.builtin.command: docker compose restart
-      args:
-        chdir: "{{ jellyfin_root }}"
-      register: restart_jellyfin
-      changed_when: restart_jellyfin.rc == 0
 
 - name: Stop Jellyfin
   when: jellyfin_enabled is false
