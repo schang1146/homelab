@@ -6,6 +6,8 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=America/Los_Angeles
+      - CRON_SCHEDULE="0 */12 * * *"
+      - CRON_RUN_ON_START=false
     volumes:
       - {{ ytdl_sub_config_directory }}:/config
       - {{ ytdl_sub_youtube_root }}:/youtube
