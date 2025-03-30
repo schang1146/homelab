@@ -72,7 +72,6 @@
         owner: "{{ server_user }}"
 
 - name: Setup Docker group
-  changed_when: 
   block:
     - name: Create `docker` group
       ansible.builtin.group:
