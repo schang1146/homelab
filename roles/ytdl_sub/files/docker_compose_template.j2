@@ -10,6 +10,7 @@ services:
       - CRON_RUN_ON_START=false
     volumes:
       - {{ ytdl_sub_config_directory }}:/config
+      - {{ ytdl_sub_music_root }}:/music
       - {{ ytdl_sub_youtube_root }}:/youtube
     ports:
       - 8443:8443
