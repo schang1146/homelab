@@ -58,7 +58,7 @@
           - docker-compose-plugin
         state: present
 
-- name: Setup Docker
+- name: Setup Docker directories
   block:
     ### -------------------------------
     ### Misc.
@@ -70,3 +70,18 @@
         state: directory
         group: "{{ server_group }}"
         owner: "{{ server_user }}"
+
+- name: Setup Docker group
+  changed_when: 
+  block:
+    - name: Create `docker` group
+      ansible.builtin.group:
+        name: docker
+        state: present
+
+    - name: Add user to `docker` group
+      ansible.builtin.user:
+        name: "{{ server_user }}"
+        group: docker
+        append: true
+        state: present
