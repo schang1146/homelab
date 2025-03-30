@@ -11,8 +11,9 @@ services:
       WATCHTOWER_CLEANUP: "true"
       # Monitor and update containers that have a `com.centurylinklabs.watchtower.enable` label set to true.
       WATCHTOWER_LABEL_ENABLE: "true"
-      # Poll interval (in seconds). This value controls how frequently watchtower will poll for new images. Either `--schedule` or a poll interval can be defined, but not both.
-      WATCHTOWER_POLL_INTERVAL: 86400 # 24 hours
+      # Cron expression in 6 fields (rather than the traditional 5) which defines when and how often to check for new images
+      # https://pkg.go.dev/github.com/robfig/cron@v1.2.0#hdr-CRON_Expression_Format
+      WATCHTOWER_SCHEDULE: 0 0 4 * * *
 
       # Notifications
       # The shoutrrr URL to send notifications to
