@@ -10,7 +10,7 @@
         owner: "{{ server_user }}"
 
     - name: Download the latest container image
-      ansible.builtin.command: docker pull traefik:v3.3
+      ansible.builtin.command: docker pull traefik:v3.4
       register: pull_result
       changed_when: "'Image is up to date' not in pull_result.stdout"
 
