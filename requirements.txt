@@ -63,7 +63,7 @@ pathspec==0.12.1
     #   yamllint
 pip-tools==7.4.1
     # via -r requirements.in
-platformdirs==4.3.6
+platformdirs==4.3.8
     # via black
 pycparser==2.22
     # via cffi
