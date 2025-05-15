@@ -3,9 +3,18 @@
   "extends": [
     "config:best-practices"
   ],
+  "pip-compile": {
+    "managerFilePatterns": ["/(^|/)requirements\\.txt$/"],
+    "lockFileMaintenance": {
+      "enabled": true,
+      "branchTopic": "pip-compile-refresh",
+      "commitMessageAction": "Refresh pip-compile outputs"
+    }
+  },
   "pip_requirements": {
-    "managerFilePatterns": [
-      "/(^|/)[\\w-]*requirements([-.]\\w+)\\.(in|txt|pip)$/"
-    ]
+    "enabled": false
+  },
+  "pip_setup": {
+    "enabled": false
   }
 }
