@@ -15,36 +15,20 @@
         dest: "{{ grafana_root }}/docker-compose.yml"
         mode: "0644"
 
-- name: Get Grafana container status
-  ansible.builtin.command: docker container ls --filter name=grafana
-  register: grafana_container_status_result
-  changed_when: false
-  check_mode: false
-
 - name: Start or restart Grafana
   when: grafana_enabled is true
   block:
-    - name: Start Grafana Docker container
-      when: grafana_container_status_result.stdout.find('grafana') == -1
+    - name: Start or restart Grafana Docker container
       ansible.builtin.command: docker compose up --detach
       args:
         chdir: "{{ grafana_root }}"
       register: start_grafana
       changed_when: start_grafana.rc == 0
 
-    - name: Restart Grafana Docker container
-      when: grafana_container_status_result.stdout.find('Up') != -1
-      ansible.builtin.command: docker compose restart
-      args:
-        chdir: "{{ grafana_root }}"
-      register: restart_grafana
-      changed_when: restart_grafana.rc == 0
-
 - name: Stop Grafana
   when: grafana_enabled is false
   block:
     - name: Stop Grafana Docker container
-      when: grafana_container_status_result.stdout.find('Up') != -1
       ansible.builtin.command: docker compose down
       args:
         chdir: "{{ grafana_root }}"
