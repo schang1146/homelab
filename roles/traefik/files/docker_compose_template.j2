@@ -10,7 +10,6 @@ services:
       - "--providers.docker.exposedbydefault=false"
       # Needed to establish jellyfin-svc
       # https://github.com/traefik/traefik/issues/8753
-      - "--providers.file.filename=/config/dynamic_conf.yml"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--entrypoints.websecure.http.tls.certresolver=letsencrypt_resolver"
@@ -43,7 +42,7 @@ services:
       traefik.http.routers.traefik.tls.domains: {{ traefik_domain_name }}
       traefik.http.routers.traefik.entrypoints: websecure
       traefik.http.routers.traefik.rule: Host(`{{ traefik_domain_name }}`)
-      traefik.http.routers.traefik.service: traefik-svc@file
-      traefik.http.services.traefik-svc.loadbalancer.server.port: 8080
+      traefik.http.routers.traefik.service: traefik-svc
+      traefik.http.services.traefik-svc.loadbalancer.server.url: http://100.105.95.120:8080
       # Watchtower
       com.centurylinklabs.watchtower.enable: true
