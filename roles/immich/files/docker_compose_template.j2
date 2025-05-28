@@ -38,8 +38,8 @@ services:
       traefik.http.routers.immich.tls.domains: {{ immich_domain_name }}
       traefik.http.routers.immich.entrypoints: websecure
       traefik.http.routers.immich.rule: Host(`{{ immich_domain_name }}`)
-      traefik.http.routers.immich.service: immich-svc@file
-      traefik.http.services.immich-svc.loadbalancer.server.port: 2283
+      traefik.http.routers.immich.service: immich-svc
+      traefik.http.services.immich-svc.loadbalancer.server.url: http://100.105.95.120:2283
       # Watchtower
       com.centurylinklabs.watchtower.enable: true
 
