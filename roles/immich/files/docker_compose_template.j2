@@ -40,8 +40,6 @@ services:
       traefik.http.routers.immich.rule: Host(`{{ immich_domain_name }}`)
       traefik.http.routers.immich.service: immich-svc
       traefik.http.services.immich-svc.loadbalancer.server.url: http://100.105.95.120:2283
-      # Watchtower
-      com.centurylinklabs.watchtower.enable: true
 
   immich-machine-learning:
     container_name: immich_machine_learning

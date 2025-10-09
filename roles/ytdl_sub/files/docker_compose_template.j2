@@ -24,5 +24,3 @@ services:
       traefik.http.routers.ytdl.rule: Host(`{{ ytdl_sub_domain_name }}`)
       traefik.http.routers.ytdl.service: ytdl-svc
       traefik.http.services.ytdl-svc.loadBalancer.server.url: http://100.105.95.120:8443
-      # Watchtower
-      com.centurylinklabs.watchtower.enable: true

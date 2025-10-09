@@ -17,10 +17,6 @@
       tags:
         - docker
 
-    - role: watchtower
-      tags:
-        - watchtower
-
     - role: tailscale
       tags:
         - tailscale
