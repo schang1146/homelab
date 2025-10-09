@@ -44,5 +44,3 @@ services:
       traefik.http.routers.traefik.rule: Host(`{{ traefik_domain_name }}`)
       traefik.http.routers.traefik.service: traefik-svc
       traefik.http.services.traefik-svc.loadbalancer.server.url: http://100.105.95.120:8080
-      # Watchtower
-      com.centurylinklabs.watchtower.enable: true

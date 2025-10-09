@@ -37,5 +37,3 @@ services:
       - "traefik.http.routers.jellyfin.service=jellyfin-svc"
       - "traefik.http.services.jellyfin-svc.loadBalancer.server.url=http://100.105.95.120:8096"
       - "traefik.http.services.jellyfin-svc.loadBalancer.passHostHeader=true"
-      # Watchtower
-      - "com.centurylinklabs.watchtower.enable=true"
