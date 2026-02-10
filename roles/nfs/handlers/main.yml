@@ -1,0 +1,7 @@
+- name: Apply NFS config file
+  ansible.builtin.command: exportfs -r
+
+- name: Restart NFS kernel server
+  ansible.builtin.systemd_service:
+    name: nfs-kernel-server
+    state: reloaded
