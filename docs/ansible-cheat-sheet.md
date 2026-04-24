@@ -48,5 +48,5 @@ ansible-vault encrypt_string '{string_to_encrypt}' --name {name_of_secret}
 echo -e '{encrypted_string}' | ansible-vault decrypt
 ```
 
-> [!NOTE]
+> [!WARNING]
 > Formatting needs to be `$ANSIBLE_VAULT;1.1;AES256\n...\n...\n...` where the newlines are included as `\n`.
