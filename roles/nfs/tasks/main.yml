@@ -1,0 +1,29 @@
+- name: Install and setup NFS on server
+  when: nfs_enabled is true
+  block:
+    - name: Install NFS server
+      ansible.builtin.apt:
+        pkg:
+          - nfs-kernel-server
+    
+    - name: Start NFS service
+      ansible.builtin.systemd_service:
+        name: nfs-kernel-server
+        state: started
+
+    - name: Configure NFS shared drive
+      ansible.builtin.file:
+        path: "{{ drive_root }}"
+        mode: "0755"
+        state: directory
+        group: "{{ server_group }}"
+        owner: "{{ server_user }}"
+
+    - name: Create NFS config file
+      ansible.builtin.template:
+        src: ../files/etc_exports.j2
+        dest: "/etc/exports"
+        mode: "0644"
+      notify: 
+        - Apply NFS config file
+        - Restart NFS kernel server
