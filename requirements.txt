@@ -4,16 +4,16 @@
 #
 #    pip-compile
 #
-ansible==13.2.0
+ansible==13.6.0
     # via -r requirements.in
-ansible-compat==25.8.2
+ansible-compat==26.3.0
     # via ansible-lint
-ansible-core==2.20.1
+ansible-core==2.20.5
     # via
     #   ansible
     #   ansible-compat
     #   ansible-lint
-ansible-lint==26.1.1
+ansible-lint==26.4.0
     # via -r requirements.in
 attrs==24.3.0
     # via
@@ -65,7 +65,7 @@ pathspec==1.0.4
     #   ansible-lint
     #   black
     #   yamllint
-pip-tools==7.5.2
+pip-tools==7.5.3
     # via -r requirements.in
 platformdirs==4.3.6
     # via black

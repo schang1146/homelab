@@ -1,7 +1,7 @@
 - name: Install and setup Immich
   when: immich_enabled is true
   block:
-    - name: Create directories for upload location and DB data
+    - name: Create directory for upload location
       ansible.builtin.file:
         path: "{{ item }}"
         mode: "0755"
@@ -10,6 +10,15 @@
         owner: "{{ server_user }}"
       with_items:
         - "{{ immich_upload_location }}"
+
+    - name: Create directory for DB data
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: "0700"
+        state: directory
+        group: "{{ server_group }}"
+        owner: 999
+      with_items:
         - "{{ immich_db_data_location }}"
 
     - name: Create Immich Docker compose file
