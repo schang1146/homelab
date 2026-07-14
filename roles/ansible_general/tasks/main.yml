@@ -2,7 +2,7 @@
   ansible.builtin.file:
     path: "{{ item.path }}"
     state: directory
-    mode: "0775"
+    mode: "0755"
     group: "{{ server_group }}"
     owner: "{{ server_user }}"
   loop: "{{ samba_shares }}"
@@ -11,6 +11,6 @@
   ansible.builtin.file:
     path: "{{ letsencrypt_directory }}"
     state: directory
-    mode: "0775"
+    mode: "0755"
     group: "{{ server_group }}"
     owner: "{{ server_user }}"
