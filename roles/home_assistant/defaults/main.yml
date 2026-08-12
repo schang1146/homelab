@@ -1,0 +1,10 @@
+home_assistant_enabled: true
+
+home_assistant_domain_name: "home-assistant.schang.dev"
+home_assistant_tz: "America/Los_Angeles"
+
+### -------------------------------
+### Directories
+### -------------------------------
+home_assistant_root: "{{ docker_root }}/home_assistant"
+home_assistant_config_directory: "{{ home_assistant_root }}/config"

@@ -4,6 +4,10 @@ http:
       loadBalancer:
         servers:
         - url: "http://{{ tailscale_ipv4 }}:8096"
+    homeassistant-svc:
+      loadBalancer:
+        servers:
+        - url: "http://{{ tailscale_ipv4 }}:8123"
     immich-svc:
       loadBalancer:
         servers:

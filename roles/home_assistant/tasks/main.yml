@@ -1,0 +1,46 @@
+- name: Install and setup Home Assistant
+  when: home_assistant_enabled is true
+  block:
+    - name: Create Home Assistant Docker directory
+      ansible.builtin.file:
+        path: "{{ home_assistant_root }}"
+        mode: "0755"
+        state: directory
+        group: "{{ server_group }}"
+        owner: "{{ server_user }}"
+
+    - name: Create persistent storage for configuration data
+      ansible.builtin.file:
+        path: "{{ home_assistant_config_directory }}"
+        mode: "0755"
+        state: directory
+        group: "{{ server_group }}"
+        owner: "{{ server_user }}"
+
+    - name: Create Home Assistant Docker compose file
+      ansible.builtin.template:
+        src: ../files/docker_compose_template.j2
+        dest: "{{ home_assistant_root }}/docker-compose.yml"
+        mode: "0644"
+        group: "{{ server_group }}"
+        owner: "{{ server_user }}"
+
+- name: Start or restart Home Assistant
+  when: home_assistant_enabled is true
+  block:
+    - name: Start or restart Home Assistant Docker container
+      ansible.builtin.command: docker compose up --detach
+      args:
+        chdir: "{{ home_assistant_root }}"
+      register: start_home_assistant
+      changed_when: start_home_assistant.rc == 0
+
+- name: Stop Home Assistant
+  when: home_assistant_enabled is false
+  block:
+    - name: Stop Home Assistant Docker container
+      ansible.builtin.command: docker compose down
+      args:
+        chdir: "{{ home_assistant_root }}"
+      register: stop_home_assistant
+      changed_when: stop_home_assistant.rc == 0

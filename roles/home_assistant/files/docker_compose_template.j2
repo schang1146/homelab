@@ -1,0 +1,25 @@
+services:
+  home-assistant:
+    container_name: home-assistant
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    volumes:
+      - {{ home_assistant_config_directory }}:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+    ports:
+      - '8123:8123'
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+    environment:
+      TZ: {{ home_assistant_tz }}
+    labels:
+      # Traefik
+      traefik.enable: true
+      traefik.http.routers.homeassistant.tls: true
+      traefik.http.routers.homeassistant.tls.certresolver: letsencrypt_resolver
+      traefik.http.routers.homeassistant.tls.domains: {{ home_assistant_domain_name }}
+      traefik.http.routers.homeassistant.entrypoints: websecure
+      traefik.http.routers.homeassistant.rule: Host(`{{ home_assistant_domain_name }}`)
+      traefik.http.routers.homeassistant.service: homeassistant-svc
+      traefik.http.services.homeassistant-svc.loadbalancer.server.url: http://100.105.95.120:8123

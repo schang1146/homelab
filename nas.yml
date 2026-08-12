@@ -47,3 +47,7 @@
     - role: ytdl_sub
       tags:
         - ytdl_sub
+
+    - role: home_assistant
+      tags:
+        - home_assistant
