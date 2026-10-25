@@ -8,8 +8,6 @@ services:
       - "--providers.docker"
       # Do not expose all Docker services, only the ones explicitly exposed
       - "--providers.docker.exposedbydefault=false"
-      # Needed to establish jellyfin-svc
-      # https://github.com/traefik/traefik/issues/8753
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       - "--entrypoints.websecure.http.tls.certresolver=letsencrypt_resolver"
